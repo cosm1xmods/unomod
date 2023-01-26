@@ -8,7 +8,7 @@
 
 **This mod server-side only**
 
-This adds card game Uno in Minecraft
+This mod adds card game Uno in Minecraft
 
 Showcase/tutorial video: **soon**
 
