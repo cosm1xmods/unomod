@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import me.cosm1x.unomod.command.CommandRegistry;
 import me.cosm1x.unomod.config.UnoModConfig;
 import me.cosm1x.unomod.eventhandler.EventsRegistry;
+import me.cosm1x.unomod.util.GenericUtils;
+import me.cosm1x.unomod.util.Managers;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 
@@ -31,6 +33,9 @@ public class UnoMod implements ModInitializer {
 		CommandRegistry.register();
 		EventsRegistry.register();
 		AutoConfig.register(UnoModConfig.class, JanksonConfigSerializer::new);
+		GenericUtils.setupPredicate();
+		GenericUtils.reloadConfig();
+		Managers.register();
 	}
 
 	public static Identifier initIdentifier(String path) {

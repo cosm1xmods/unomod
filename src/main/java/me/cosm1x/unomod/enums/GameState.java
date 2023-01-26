@@ -1,8 +1,8 @@
-package me.cosm1x.unomod.game;
+package me.cosm1x.unomod.enums;
 
 public enum GameState {
     WAITING,
     PREGAME,
-    PLAY,
+    INGAME,
     ENDGAME
 }

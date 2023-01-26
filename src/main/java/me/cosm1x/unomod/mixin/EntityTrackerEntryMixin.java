@@ -32,10 +32,4 @@ public class EntityTrackerEntryMixin {
             info.cancel(); 
         }
     }
-
-    // @Inject(method = "sendSyncPacket", at = @At("HEAD"), cancellable = true)
-    // private void unomod$sendSyncPacket(Packet<?> packet, CallbackInfo info) {
-    //     System.out.println(packet);
-    //     System.out.println("sendSyncPacket");
-    // }
 }

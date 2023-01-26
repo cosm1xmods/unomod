@@ -1,37 +1,42 @@
 package me.cosm1x.unomod.game;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.server.network.ServerPlayerEntity;
+import me.cosm1x.unomod.card.Card;
+import me.cosm1x.unomod.enums.GameState;
+import net.minecraft.entity.AreaEffectCloudEntity;
 
 public class Game {
-    private List<ServerPlayerEntity> players;
-    private Map<ServerPlayerEntity, Seat> seats = Collections.emptyMap();
-    
     private GameState gameState;
-    private int id;
     private boolean justStarted;
+    private Card nextTopCard;    
+    private Card topCard;
+    private AreaEffectCloudEntity cardEntity;
     
-    public List<ServerPlayerEntity> getPlayers() {
-        return players;
+    public AreaEffectCloudEntity getCardEntity() {
+        return cardEntity;
+    }
+
+    public void setCardEntity(AreaEffectCloudEntity cardEntity) {
+        this.cardEntity = cardEntity;
+    }
+
+    public Card getNextTopCard() {
+        return this.nextTopCard;
+    }
+
+    public void setNextTopCard(Card nextTopCard) {
+        this.nextTopCard = nextTopCard;
     }
     
+    public Card getTopCard() {
+        return topCard;
+    }
+
+    public void setTopCard(Card topCard) {
+        this.topCard = topCard;
+    }
+
     public GameState getGameState() {
         return gameState;
-    }
-    
-    public int getId() {
-        return id;
-    }
-
-    protected Map<ServerPlayerEntity, Seat> getSeats() {
-        return seats;
-    }
-
-    public void addPlayer(ServerPlayerEntity player) {
-        this.players.add(player);
     }
 
     protected boolean getStartState() {
@@ -46,11 +51,10 @@ public class Game {
         this.gameState = state;
     }
 
-    public Game(List<ServerPlayerEntity> players, GameState gameState, int id) {
-        this.players = players;
+    protected Game(GameState gameState) {
         this.gameState = gameState;
-        this.id = id;
     }
 
+    
 
 }

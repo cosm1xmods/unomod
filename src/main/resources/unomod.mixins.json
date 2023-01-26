@@ -7,7 +7,9 @@
     "ServerPlayerEntityMixin",
     "ArmorStandEntityMixin",
     "EntityTrackerEntryMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "AbstractDecorationEntityMixin",
+    "ResourcePackMixin"
   ],
   "client": [
   ],
