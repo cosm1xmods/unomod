@@ -45,7 +45,11 @@ public class ServerPlayerEntityMixin implements ServerPlayerEntityMixinAccess {
 	}
 
 	public void unomod$toggleUno() {
-		this.unomod$isUnoPressed = !this.unomod$isUnoPressed;
+		this.unomod$isUnoPressed = true;
+	}
+
+	public void unomod$unToggleUno() {
+		this.unomod$isUnoPressed = false;
 	}
 
 	@Inject(method = "onSpawn()V", at = @At("TAIL"))

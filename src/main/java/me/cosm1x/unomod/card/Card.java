@@ -17,6 +17,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 
+import java.util.List;
+
+import me.cosm1x.unomod.access.ServerPlayerEntityMixinAccess;
+
 public class Card {
     private CardColor color;
     private CardValue value;
@@ -48,14 +52,18 @@ public class Card {
                 case DRAW:
                     if (this.color == CardColor.WILD) {
                         this.setupWild(player);
+                        game.setNextTopCard(this);
+                        this.removeOneCard(player, hand, player.getWorld(), table);
                         return;
                     }
                     playerStorage.skipPlayer();
                     Managers.getCardManager().giveCard(playerStorage.getNextPlayer(), 2, false);
                     game.setNextTopCard(this);
+                    this.removeOneCard(player, hand, player.getWorld(), table);
                     return;
                 case WILD:
                     this.setupWild(player);
+                    this.removeOneCard(player, hand, player.getWorld(), table);
                     return;
                 default:
                     if (CardManager.checkForSpecialCard(game.getTopCard(), this, table, game, player, hand, playerStorage, true)) return;
@@ -88,6 +96,31 @@ public class Card {
             }
         } else {
             doWildAction(player, game, playerStorage);
+        }
+    }
+
+    public void unoButton(Table table, Game game, ServerPlayerEntity player, Hand hand, PlayerStorage playerStorage) {
+        if (this.color != CardColor.UNO) return; 
+        ServerWorld world = player.getWorld();
+        Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
+        ScoreboardPlayerScore playerScore = world.getScoreboard().getPlayerScore(player.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
+        if (playerScore.getScore() == 2) {
+            ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
+            player.getStackInHand(hand).decrement(1);
+        }
+        for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
+            if (lplayer.equals((ServerPlayerEntity)player)) continue;
+            ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
+            if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
+                Managers.getCardManager().giveCard(lplayer, 2, false);
+                clearUnoButton(playerStorage.getPlayers());
+            }
+        }
+    }
+
+    public static void clearUnoButton(List<ServerPlayerEntity> players) {
+        for (ServerPlayerEntity player : players) {
+            Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
         }
     }
 

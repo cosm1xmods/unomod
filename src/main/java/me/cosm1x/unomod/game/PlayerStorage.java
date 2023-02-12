@@ -7,10 +7,11 @@ import me.cosm1x.unomod.access.ServerPlayerEntityMixinAccess;
 import me.cosm1x.unomod.card.Card;
 import me.cosm1x.unomod.enums.CardColor;
 import me.cosm1x.unomod.enums.CardValue;
+import me.cosm1x.unomod.enums.GameState;
 import me.cosm1x.unomod.enums.TurnDirection;
-import me.cosm1x.unomod.mixin.ServerPlayerEntityMixin;
 import me.cosm1x.unomod.util.GenericUtils;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -86,15 +87,33 @@ public class PlayerStorage {
     }
 
     public void turn() {
-        this.currentPlayer.removeStatusEffect(StatusEffects.GLOWING);
         ServerWorld world = this.currentPlayer.getWorld();
+        Table table = GenericUtils.getTableByPlayer(this.currentPlayer);
+        Game game = table.getGame();
         ScoreboardPlayerScore oldScore = world.getScoreboard().getPlayerScore(this.currentPlayer.getEntityName(), world.getScoreboard().getObjective("table"+GenericUtils.getTableByPlayer(this.currentPlayer).getId()));
+        if (oldScore.getScore() == 0) {
+            game.setGameState(GameState.ENDGAME);
+            this.currentPlayer.removeStatusEffect(StatusEffects.GLOWING);
+            return;
+        }
+        this.currentPlayer.removeStatusEffect(StatusEffects.GLOWING);
         if (oldScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)this.currentPlayer).unomod$isUnoPressed())) {
+            Inventories.remove(this.currentPlayer.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
+            for (ServerPlayerEntity player : this.players) {
+                if (player.equals(this.currentPlayer)) continue;
+                player.giveItemStack(new Card(CardColor.UNO, CardValue.ZERO).toItemStack());
+            }
+        } else {
+            boolean clear = false;
             for (ServerPlayerEntity player : this.players) {
                 if (player.equals(this.currentPlayer)) continue;
                 ScoreboardPlayerScore playerScore = world.getScoreboard().getPlayerScore(player.getEntityName(), world.getScoreboard().getObjective("table"+GenericUtils.getTableByPlayer(player).getId()));
-                if (playerScore.getScore() == 2) continue;
-                player.giveItemStack(new Card(CardColor.UNO, CardValue.UNO).toItemStack());
+                if (playerScore.getScore() == 1)
+                    if (player.equals(this.players.get(GenericUtils.getPreviousIndex(this.players, this.players.indexOf(this.currentPlayer), 1))))
+                        clear = true;
+            }
+            if (clear) {
+                Card.clearUnoButton(this.players);
             }
         }
         if ((!skipPlayer)) {
@@ -110,7 +129,8 @@ public class PlayerStorage {
         ScoreboardPlayerScore newScore = world.getScoreboard().getPlayerScore(this.currentPlayer.getEntityName(), world.getScoreboard().getObjective("table"+GenericUtils.getTableByPlayer(this.currentPlayer).getId()));
         
         if (newScore.getScore() == 2) {
-            this.currentPlayer.giveItemStack(new Card(CardColor.UNO, CardValue.UNO).toItemStack());
+            ((ServerPlayerEntityMixinAccess)this.currentPlayer).unomod$unToggleUno();
+            this.currentPlayer.giveItemStack(new Card(CardColor.UNO, CardValue.ZERO).toItemStack());
         }
 
     }

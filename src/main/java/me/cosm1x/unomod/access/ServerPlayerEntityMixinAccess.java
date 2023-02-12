@@ -9,5 +9,6 @@ public interface ServerPlayerEntityMixinAccess {
     boolean unomod$isUnoPressed();
     boolean unomod$ingame();
     void unomod$toggleUno();
+    void unomod$unToggleUno();
     void unomod$toggleIngame();
 }

@@ -25,8 +25,7 @@ public enum CardValue {
     REDDRAW(18, 'r'),
     GREENDRAW(19, 'g'),
     BLUEDRAW(20, 'b'),
-    YELLOWDRAW(21, 'y'),
-    UNO(0, 'U');
+    YELLOWDRAW(21, 'y');
 
     private int id;
     private char symbol;

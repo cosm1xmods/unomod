@@ -25,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.NbtPredicate;
 import net.minecraft.predicate.entity.EntityPredicate;
@@ -98,6 +99,16 @@ public class GenericUtils {
         return false;
     };
 
+    public static final Predicate<ItemStack> IS_A_CARD = stack -> {
+        NbtCompound nbt = stack.getNbt();
+        if (stack.getItem().equals(Items.STRUCTURE_BLOCK)) {
+            int customModelData = nbt.getInt("CustomModelData");
+            if (customModelData != 0 && customModelData >= 1000 && customModelData <= 6000) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     private static final Predicate<ItemFrameEntity> BIG_TABLE_PREDICATE = entity -> {
         BlockPos attachmentPos = entity.getDecorationBlockPos().offset(Axis.Y, -1);

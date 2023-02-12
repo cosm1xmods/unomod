@@ -33,6 +33,7 @@ public class TableManager {
     public TableManager() {}
     
     public void tick(MinecraftServer server) {
+        this.removeMarked(server.getOverworld());
         for (Table table : this.tables) {
             if (table.getGame().getGameState() != GameState.WAITING) return;
             BlockStateStorage blockStateStorage = table.getBlockStateStorage();
@@ -41,6 +42,17 @@ public class TableManager {
                     table.getGame().setGameState(GameState.PREGAME);
                 }
         }
+    }
+
+    private void removeMarked(World world) {
+        List<Table> marked = new ArrayList<>();
+        for (Table table : this.tables) {
+            if (table.isDirty()) {
+                marked.add(table);
+            }
+        }
+        this.onTableBreak(marked, world);
+        this.tables.removeAll(marked);
     }
 
     public void onBigTableForm(ItemFrameEntity entity, World world) {
@@ -142,6 +154,12 @@ public class TableManager {
         
     }
 
+    public void onTableBreak(List<Table> tables, World world) {
+        for (Table table : tables) {
+            this.onTableBreak(table, world, true);
+        }
+    }
+
     public void onTableBreak(BlockPos pos, World world) {
         UnoModConfig config = GenericUtils.getConfig();
         List<Table> tablesToRemove = new ArrayList<>();
@@ -198,6 +216,52 @@ public class TableManager {
         // Removing tables
         this.deleteTables(tablesToRemove);
     }
+
+    public void onTableBreak(Table table, World world, boolean multiply) {
+        UnoModConfig config = GenericUtils.getConfig();
+        BlockPos tableCenter = table.getCenter();
+
+        // Removing seats(pigs)
+        List<? extends Entity> entities = GenericUtils.getEntitiesWithTag((ServerWorld)world, "table" + table.getId());
+        for (Entity lentity : entities) {
+            lentity.discard();
+        }
+        
+        // Removing buttons
+        BlockPos buttonNegZ = tableCenter.offset(Axis.Z, -2);
+        BlockPos buttonPosZ = tableCenter.offset(Axis.Z, 2);
+        BlockPos buttonNegX = tableCenter.offset(Axis.X, -2);
+        BlockPos buttonPosX = tableCenter.offset(Axis.X, 2);
+        BlockPos[] buttons = {buttonNegZ, buttonPosZ, buttonNegX, buttonPosX};
+        for (int i = 0; i<4; i++) {
+            BlockPos button = buttons[i].offset(Axis.Y, 1);
+            world.setBlockState(button, Blocks.AIR.getDefaultState());
+        }
+
+        ItemFrameEntity itemFrame = table.getItemFrame();
+        // Setup Item Frame
+        NbtCompound itemNbt = new NbtCompound();
+        itemNbt.putString("id", config.getItemFrameItemNamespace());
+        itemNbt.putByte("Count", (byte)1);
+        ItemStack originalItem = ItemStack.fromNbt(itemNbt);
+        
+        itemFrame.dropStack(originalItem);
+        itemFrame.dropStack(GenericUtils.getItemFrameStack());
+
+        itemFrame.discard();
+
+        if (world.getScoreboard().getObjective("table" + table.getId()) != null) {
+            world.getScoreboard().removeObjective(world.getScoreboard().getObjective("table" + table.getId()));
+            table.getGame().getCardEntity().discard();
+        }
+        
+
+        // Removing table
+        if (!multiply) {
+            this.deleteTable(table);
+        }
+            
+    }
     
     public List<Table> getTables() {
         return this.tables;
@@ -209,6 +273,10 @@ public class TableManager {
 
     public void deleteTables(List<Table> table) {
         this.tables.removeAll(table);
+    }
+
+    public void deleteTable(Table table) {
+        this.tables.remove(table);
     }
 
         // public void deleteTable(Table table) {

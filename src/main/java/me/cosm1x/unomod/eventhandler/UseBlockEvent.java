@@ -7,6 +7,6 @@ public class UseBlockEvent {
         UseBlockCallback.EVENT.register(EventHandlers::onUseBlock);
         UseBlockCallback.EVENT.register(EventHandlers::takeCard);
         UseBlockCallback.EVENT.register(EventHandlers::onUseItem);
-        UseBlockCallback.EVENT.register(EventHandlers::onUnoButtonPressBlock);
+        // UseBlockCallback.EVENT.register(EventHandlers::onUnoButtonPressBlock);
     }
 }

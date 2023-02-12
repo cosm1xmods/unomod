@@ -19,8 +19,6 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 public class UnoMod implements ModInitializer {
 	public static final String MODID = "unomod";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-	public static boolean canSpectatorSeeCards;
-
 	@Override
 	public void onInitialize() {
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER) {

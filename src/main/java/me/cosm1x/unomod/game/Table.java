@@ -12,6 +12,7 @@ public class Table {
     private Game game;
     private PlayerStorage playerStorage;
     private BlockStateStorage blockStateStorage;
+    private boolean dirty = false;
     
     protected Table(ItemFrameEntity itemFrame, BlockPos center, int id, Game game,
         @Nullable PlayerStorage playerStorage, 
@@ -56,5 +57,13 @@ public class Table {
 
     protected void setBlockStateStorage(BlockStateStorage blockStateStorage) {
         this.blockStateStorage = blockStateStorage;
+    }
+
+    public void markDirty() {
+        this.dirty = true;
+    }
+
+    public boolean isDirty() {
+        return this.dirty;
     }
 }

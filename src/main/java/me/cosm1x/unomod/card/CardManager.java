@@ -24,7 +24,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction.Axis;
 
@@ -65,6 +64,7 @@ public class CardManager {
     }
 
     public void onItemUse(ServerPlayerEntity player, ServerWorld world, Hand hand) {
+        System.out.println("on ItemUse");
         if (hand != Hand.MAIN_HAND) return;
         if (player.getStackInHand(hand).isEmpty()) return;
         if (!(GenericUtils.isPlayerInGame(player))) return;
@@ -78,10 +78,18 @@ public class CardManager {
         int cardColor = Integer.parseInt("" + ("" + customModelData).charAt(0));
         int cardValue = customModelData % 100;
 
+        System.out.println(customModelData);
+        System.out.println(cardColor);
+        System.out.println(cardValue);
+
         Card topCard = game.getTopCard();
         Card card = new Card(CardColor.valueOf(cardColor).get(), CardValue.valueOf(cardValue).get());
-        
-        if (card.getColor().equals(CardColor.WILD)) {
+
+        System.out.println(card);
+
+        if (card.getColor().equals(CardColor.UNO)) {
+            card.unoButton(table, game, player, hand, playerStorage);
+        } else if (card.getColor().equals(CardColor.WILD)) {
             card.doAction(table, game, player, hand, playerStorage);
         } else if (topCard.getValue().equals(card.getValue())) {
             card.doAction(table, game, player, hand, playerStorage);
@@ -91,8 +99,7 @@ public class CardManager {
             playerStorage.turn();
         } else if (player.getScoreboardTags().contains("unomod_wild")) {
             card.doAction(table, game, player, hand, playerStorage);
-        } else {
-            checkForSpecialCard(topCard, card, table, game, player, hand, playerStorage, false);
+        } else if (checkForSpecialCard(topCard, card, table, game, player, hand, playerStorage, false)) {
             playerStorage.turn();
         }
     }

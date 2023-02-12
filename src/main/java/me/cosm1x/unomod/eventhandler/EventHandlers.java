@@ -2,7 +2,6 @@ package me.cosm1x.unomod.eventhandler;
 
 import java.util.List;
 
-import me.cosm1x.unomod.access.ServerPlayerEntityMixinAccess;
 import me.cosm1x.unomod.enums.GameState;
 import me.cosm1x.unomod.game.BlockStateStorage;
 import me.cosm1x.unomod.game.Game;
@@ -14,10 +13,7 @@ import me.cosm1x.unomod.util.Managers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -134,72 +130,79 @@ public class EventHandlers {
     }
 
     public static ActionResult onUseItem(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
+        System.out.println(player.toString() + " " + world.toString() + " " + hand.toString()); 
         if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
         if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
         Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
+        System.out.println(table);
 
         if (table != null)
             if (table.getBlockStateStorage().getButtons().contains(world.getBlockState(result.getBlockPos()))) return ActionResult.PASS;
         if (player.getStackInHand(hand).getNbt() != null) {
             if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 0 && player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000) {
+                System.out.println("onItemUse");
                 Managers.getCardManager().onItemUse((ServerPlayerEntity)player, (ServerWorld)world, hand);
             }
         }
         return ActionResult.PASS;
     }
 
-    public static ActionResult onUnoButtonPressBlock(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
-        if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
-        if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
-        if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return ActionResult.PASS;
-        Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
-        if (table.getGame().getGameState() != GameState.INGAME) return ActionResult.PASS;
-        if (player.getStackInHand(hand).getNbt() != null) 
-            if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
-                return ActionResult.PASS;
-        Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
-        ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
-        for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
-            if (lplayer.equals((ServerPlayerEntity)player)) continue;
-            ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
-            if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
-                Managers.getCardManager().giveCard(lplayer, 2, false);
-            }
-        }
-        return ActionResult.PASS;
-    }
+    // public static ActionResult onUnoButtonPressBlock(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
+    //     System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
+    //     if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
+    //     if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
+    //     if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return ActionResult.PASS;
+    //     Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
+    //     if (table.getGame().getGameState() != GameState.INGAME) return ActionResult.PASS;
+    //     if (player.getStackInHand(hand).getNbt() != null) 
+    //         if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
+    //             return ActionResult.PASS;
+    //     Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
+    //     ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
+    //     for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
+    //         if (lplayer.equals((ServerPlayerEntity)player)) continue;
+    //         ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
+    //         if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
+    //             Managers.getCardManager().giveCard(lplayer, 2, false);
+    //         }
+    //     }
+    //     return ActionResult.PASS;
+    // }
  
     // UseItemEvent
 
     public static TypedActionResult<ItemStack> onItemCarduse(PlayerEntity player, World world, Hand hand) {
+        System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
         if (hand != Hand.MAIN_HAND) return TypedActionResult.pass(player.getStackInHand(hand));
         if (player.getStackInHand(hand).isEmpty()) return TypedActionResult.pass(player.getStackInHand(hand));
         if (player.getStackInHand(hand).getNbt() != null) {
-            if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 0 && player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000) {
+            if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 0) {
+                System.out.println("onItemUse");
                 Managers.getCardManager().onItemUse((ServerPlayerEntity)player, (ServerWorld)world, hand);
             }
         }
         return TypedActionResult.pass(player.getStackInHand(hand));
     }
 
-    public static TypedActionResult<ItemStack> onUnoButtonPressItem(PlayerEntity player, World world, Hand hand) {
-        if (hand != Hand.MAIN_HAND) return TypedActionResult.pass(player.getStackInHand(hand));
-        if (player.getStackInHand(hand).isEmpty()) return TypedActionResult.pass(player.getStackInHand(hand));
-        if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return TypedActionResult.pass(player.getStackInHand(hand));
-        Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
-        if (table.getGame().getGameState() != GameState.INGAME) return TypedActionResult.pass(player.getStackInHand(hand));
-        if (player.getStackInHand(hand).getNbt() != null) 
-            if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
-                return TypedActionResult.pass(player.getStackInHand(hand));
-        Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
-        ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
-        for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
-            if (lplayer.equals((ServerPlayerEntity)player)) continue;
-            ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
-            if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
-                Managers.getCardManager().giveCard(lplayer, 2, false);
-            }
-        }
-        return TypedActionResult.pass(player.getStackInHand(hand));
-    }
+    // public static TypedActionResult<ItemStack> onUnoButtonPressItem(PlayerEntity player, World world, Hand hand) {
+    //     System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
+    //     if (hand != Hand.MAIN_HAND) return TypedActionResult.pass(player.getStackInHand(hand));
+    //     if (player.getStackInHand(hand).isEmpty()) return TypedActionResult.pass(player.getStackInHand(hand));
+    //     if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return TypedActionResult.pass(player.getStackInHand(hand));
+    //     Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
+    //     if (table.getGame().getGameState() != GameState.INGAME) return TypedActionResult.pass(player.getStackInHand(hand));
+    //     if (player.getStackInHand(hand).getNbt() != null) 
+    //         if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
+    //             return TypedActionResult.pass(player.getStackInHand(hand));
+    //     Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
+    //     ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
+    //     for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
+    //         if (lplayer.equals((ServerPlayerEntity)player)) continue;
+    //         ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
+    //         if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
+    //             Managers.getCardManager().giveCard(lplayer, 2, false);
+    //         }
+    //     }
+    //     return TypedActionResult.pass(player.getStackInHand(hand));
+    // }
 }
