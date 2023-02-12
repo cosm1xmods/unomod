@@ -86,8 +86,9 @@ public class GameManager {
     private void tickEndGame(ServerWorld world, Game game, Table table) {
         ServerPlayerEntity winner = table.getPlayerStorage().getCurrentPlayer();
         if (winner.hasStatusEffect(StatusEffects.GLOWING)) return;
-        if (world.getScoreboard().addPlayerToTeam(winner.getEntityName(), world.getScoreboard().getTeam("unomod_winners")) && !(world.getScoreboard().getTeam("unomod_winners").getPlayerList().contains(winner.getEntityName()))) {
-            StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.GLOWING, 5, 1, false, false, true);
+        if (world.getScoreboard().addPlayerToTeam(winner.getEntityName(), world.getScoreboard().getTeam("unomod_winners")) && !game.isEndgame()) {
+            game.toEndgame();
+            StatusEffectInstance effect = new StatusEffectInstance(StatusEffects.GLOWING, 5 * 20, 1, false, false, true);
             winner.setStatusEffect(effect, null);
         } else {
             world.getScoreboard().removePlayerFromTeam(winner.getEntityName(), world.getScoreboard().getTeam("unomod_winners"));

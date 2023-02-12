@@ -10,6 +10,7 @@ public class Game {
     private Card nextTopCard;    
     private Card topCard;
     private AreaEffectCloudEntity cardEntity;
+    private boolean endgame = false;
     
     public AreaEffectCloudEntity getCardEntity() {
         return cardEntity;
@@ -55,6 +56,11 @@ public class Game {
         this.gameState = gameState;
     }
 
-    
+    public void toEndgame() {
+        this.endgame = true;
+    }
 
+    public boolean isEndgame() {
+        return this.endgame;
+    }
 }
