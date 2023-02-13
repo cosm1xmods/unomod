@@ -1,8 +1,10 @@
-package me.cosm1x.unomod.game;
+package me.cosm1x.unomod.managers;
 
 import me.cosm1x.unomod.card.Card;
-import me.cosm1x.unomod.card.CardManager;
 import me.cosm1x.unomod.enums.GameState;
+import me.cosm1x.unomod.game.Game;
+import me.cosm1x.unomod.game.PlayerStorage;
+import me.cosm1x.unomod.game.Table;
 import me.cosm1x.unomod.util.GenericUtils;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;

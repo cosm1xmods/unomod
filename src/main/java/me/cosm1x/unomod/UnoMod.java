@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import me.cosm1x.unomod.command.CommandRegistry;
 import me.cosm1x.unomod.config.UnoModConfig;
-import me.cosm1x.unomod.eventhandler.EventsRegistry;
+import me.cosm1x.unomod.event.registry.EventsRegistry;
 import me.cosm1x.unomod.util.GenericUtils;
 import me.cosm1x.unomod.util.Managers;
 import me.shedaniel.autoconfig.AutoConfig;

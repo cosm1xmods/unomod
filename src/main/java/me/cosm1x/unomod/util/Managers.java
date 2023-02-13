@@ -1,8 +1,8 @@
 package me.cosm1x.unomod.util;
 
-import me.cosm1x.unomod.card.CardManager;
-import me.cosm1x.unomod.game.GameManager;
-import me.cosm1x.unomod.game.TableManager;
+import me.cosm1x.unomod.managers.CardManager;
+import me.cosm1x.unomod.managers.GameManager;
+import me.cosm1x.unomod.managers.TableManager;
 
 public class Managers {
     private static TableManager uTableManager = new TableManager();

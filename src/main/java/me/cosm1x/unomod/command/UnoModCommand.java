@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 
 import me.cosm1x.unomod.game.Table;
-import me.cosm1x.unomod.game.TableManager;
+import me.cosm1x.unomod.managers.TableManager;
 import me.cosm1x.unomod.util.GenericUtils;
 import me.cosm1x.unomod.util.Managers;
 

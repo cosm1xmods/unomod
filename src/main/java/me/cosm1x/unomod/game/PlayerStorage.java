@@ -26,7 +26,7 @@ public class PlayerStorage {
     private TurnDirection turnDirection;
     private boolean skipPlayer = false;
 
-    protected PlayerStorage () {
+    public PlayerStorage () {
         this.turnDirection = TurnDirection.NORMAL;
     };
 

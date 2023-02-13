@@ -20,7 +20,7 @@ public class BlockStateStorage {
     private boolean northButtonPressed;
     private boolean westButtonPressed;
     
-    protected BlockStateStorage() {}
+    public BlockStateStorage() {}
     
     protected BlockStateStorage(BlockState southButton, BlockState eastButton, BlockState northButton, BlockState westButton) {
         this.southButton = southButton;
@@ -101,19 +101,19 @@ public class BlockStateStorage {
         return this.westButtonPressed;
     }
     
-    protected void setSouthButton(BlockState southButton) {
+    public void setSouthButton(BlockState southButton) {
         this.southButton = southButton;
     }
     
-    protected void setEastButton(BlockState eastButton) {
+    public void setEastButton(BlockState eastButton) {
         this.eastButton = eastButton;
     }
     
-    protected void setNorthButton(BlockState northButton) {
+    public void setNorthButton(BlockState northButton) {
         this.northButton = northButton;
     }
     
-    protected void setWestButton(BlockState westButton) {
+    public void setWestButton(BlockState westButton) {
         this.westButton = westButton;
     }
 

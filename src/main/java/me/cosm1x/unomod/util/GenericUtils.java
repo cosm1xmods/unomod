@@ -15,8 +15,7 @@ import me.cosm1x.unomod.enums.CardValue;
 import me.cosm1x.unomod.enums.GameState;
 import me.cosm1x.unomod.game.Game;
 import me.cosm1x.unomod.game.Table;
-import me.cosm1x.unomod.game.TableManager;
-
+import me.cosm1x.unomod.managers.TableManager;
 import me.shedaniel.autoconfig.AutoConfig;
 
 import net.minecraft.block.Blocks;

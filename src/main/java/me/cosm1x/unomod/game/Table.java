@@ -14,7 +14,7 @@ public class Table {
     private BlockStateStorage blockStateStorage;
     private boolean dirty = false;
     
-    protected Table(ItemFrameEntity itemFrame, BlockPos center, int id, Game game,
+    public Table(ItemFrameEntity itemFrame, BlockPos center, int id, Game game,
         @Nullable PlayerStorage playerStorage, 
         @Nullable BlockStateStorage blockStateStorage)
     {

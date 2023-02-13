@@ -1,7 +1,8 @@
-package me.cosm1x.unomod.card;
+package me.cosm1x.unomod.managers;
 
 import java.util.List;
 
+import me.cosm1x.unomod.card.Card;
 import me.cosm1x.unomod.enums.CardColor;
 import me.cosm1x.unomod.enums.CardValue;
 import me.cosm1x.unomod.game.Game;
@@ -64,7 +65,6 @@ public class CardManager {
     }
 
     public void onItemUse(ServerPlayerEntity player, ServerWorld world, Hand hand) {
-        System.out.println("on ItemUse");
         if (hand != Hand.MAIN_HAND) return;
         if (player.getStackInHand(hand).isEmpty()) return;
         if (!(GenericUtils.isPlayerInGame(player))) return;
@@ -78,14 +78,8 @@ public class CardManager {
         int cardColor = Integer.parseInt("" + ("" + customModelData).charAt(0));
         int cardValue = customModelData % 100;
 
-        System.out.println(customModelData);
-        System.out.println(cardColor);
-        System.out.println(cardValue);
-
         Card topCard = game.getTopCard();
         Card card = new Card(CardColor.valueOf(cardColor).get(), CardValue.valueOf(cardValue).get());
-
-        System.out.println(card);
 
         if (card.getColor().equals(CardColor.UNO)) {
             card.unoButton(table, game, player, hand, playerStorage);
@@ -104,7 +98,7 @@ public class CardManager {
         }
     }
 
-    protected static boolean checkForSpecialCard(Card topCard, Card card, Table table, Game game, ServerPlayerEntity player, Hand hand, PlayerStorage playerStorage, boolean fromCard) {
+    public static boolean checkForSpecialCard(Card topCard, Card card, Table table, Game game, ServerPlayerEntity player, Hand hand, PlayerStorage playerStorage, boolean fromCard) {
         switch(topCard.getValue()) {
             case REDCHANGE:
             case REDDRAW:

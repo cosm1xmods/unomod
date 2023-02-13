@@ -5,6 +5,7 @@ import me.cosm1x.unomod.enums.CardValue;
 import me.cosm1x.unomod.game.Game;
 import me.cosm1x.unomod.game.PlayerStorage;
 import me.cosm1x.unomod.game.Table;
+import me.cosm1x.unomod.managers.CardManager;
 import me.cosm1x.unomod.util.GenericUtils;
 import me.cosm1x.unomod.util.Managers;
 import net.minecraft.inventory.Inventories;
@@ -124,7 +125,7 @@ public class Card {
         }
     }
 
-    protected static boolean checkForSpecialWild(Card topCard, Card card, Game game) {
+    public static boolean checkForSpecialWild(Card topCard, Card card, Game game) {
         switch (topCard.getValue()) {
             case REDCHANGE:
             case REDDRAW:
@@ -164,11 +165,11 @@ public class Card {
         score.incrementScore(-1);
     }
 
-    protected static boolean checkForWildChange(Card card) {
+    private static boolean checkForWildChange(Card card) {
         return card.getValue() == CardValue.REDCHANGE || card.getValue() == CardValue.BLUECHANGE || card.getValue() == CardValue.GREENCHANGE || card.getValue() == CardValue.YELLOWCHANGE;
     }
 
-    protected static boolean checkForWildDraw(Card card) {
+    private static boolean checkForWildDraw(Card card) {
         return card.getValue() == CardValue.REDDRAW || card.getValue() == CardValue.BLUEDRAW || card.getValue() == CardValue.GREENDRAW || card.getValue() == CardValue.YELLOWDRAW;
     }
 

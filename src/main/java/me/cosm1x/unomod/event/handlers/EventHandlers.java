@@ -1,4 +1,4 @@
-package me.cosm1x.unomod.eventhandler;
+package me.cosm1x.unomod.event.handlers;
 
 import java.util.List;
 
@@ -7,11 +7,12 @@ import me.cosm1x.unomod.game.BlockStateStorage;
 import me.cosm1x.unomod.game.Game;
 import me.cosm1x.unomod.game.PlayerStorage;
 import me.cosm1x.unomod.game.Table;
-import me.cosm1x.unomod.game.TableManager;
+import me.cosm1x.unomod.managers.TableManager;
 import me.cosm1x.unomod.util.GenericUtils;
 import me.cosm1x.unomod.util.Managers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,12 +22,15 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class EventHandlers {
 
+    // *************
     // UseBlockEvent
+    // *************
 
     public static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
         if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
@@ -130,79 +134,73 @@ public class EventHandlers {
     }
 
     public static ActionResult onUseItem(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
-        System.out.println(player.toString() + " " + world.toString() + " " + hand.toString()); 
         if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
         if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
         Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
-        System.out.println(table);
 
         if (table != null)
             if (table.getBlockStateStorage().getButtons().contains(world.getBlockState(result.getBlockPos()))) return ActionResult.PASS;
         if (player.getStackInHand(hand).getNbt() != null) {
             if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 0 && player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000) {
-                System.out.println("onItemUse");
                 Managers.getCardManager().onItemUse((ServerPlayerEntity)player, (ServerWorld)world, hand);
             }
         }
         return ActionResult.PASS;
     }
 
-    // public static ActionResult onUnoButtonPressBlock(PlayerEntity player, World world, Hand hand, BlockHitResult result) {
-    //     System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
-    //     if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
-    //     if (player.getStackInHand(hand).isEmpty()) return ActionResult.PASS;
-    //     if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return ActionResult.PASS;
-    //     Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
-    //     if (table.getGame().getGameState() != GameState.INGAME) return ActionResult.PASS;
-    //     if (player.getStackInHand(hand).getNbt() != null) 
-    //         if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
-    //             return ActionResult.PASS;
-    //     Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
-    //     ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
-    //     for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
-    //         if (lplayer.equals((ServerPlayerEntity)player)) continue;
-    //         ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
-    //         if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
-    //             Managers.getCardManager().giveCard(lplayer, 2, false);
-    //         }
-    //     }
-    //     return ActionResult.PASS;
-    // }
- 
+    // ************
     // UseItemEvent
-
-    public static TypedActionResult<ItemStack> onItemCarduse(PlayerEntity player, World world, Hand hand) {
-        System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
+    // ************
+    
+    public static TypedActionResult<ItemStack> onItemCardUse(PlayerEntity player, World world, Hand hand) {
         if (hand != Hand.MAIN_HAND) return TypedActionResult.pass(player.getStackInHand(hand));
         if (player.getStackInHand(hand).isEmpty()) return TypedActionResult.pass(player.getStackInHand(hand));
         if (player.getStackInHand(hand).getNbt() != null) {
             if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 0) {
-                System.out.println("onItemUse");
                 Managers.getCardManager().onItemUse((ServerPlayerEntity)player, (ServerWorld)world, hand);
             }
         }
         return TypedActionResult.pass(player.getStackInHand(hand));
     }
 
-    // public static TypedActionResult<ItemStack> onUnoButtonPressItem(PlayerEntity player, World world, Hand hand) {
-    //     System.out.println(player.toString() + " " + world.toString() + " " + hand.toString());
-    //     if (hand != Hand.MAIN_HAND) return TypedActionResult.pass(player.getStackInHand(hand));
-    //     if (player.getStackInHand(hand).isEmpty()) return TypedActionResult.pass(player.getStackInHand(hand));
-    //     if (!(GenericUtils.isPlayerInGame((ServerPlayerEntity)player))) return TypedActionResult.pass(player.getStackInHand(hand));
-    //     Table table = GenericUtils.getTableByPlayer((ServerPlayerEntity)player);
-    //     if (table.getGame().getGameState() != GameState.INGAME) return TypedActionResult.pass(player.getStackInHand(hand));
-    //     if (player.getStackInHand(hand).getNbt() != null) 
-    //         if (player.getStackInHand(hand).getNbt().getInt("CustomModelData") != 6000 && (!(player.getStackInHand(hand).getItem().equals(Items.STRUCTURE_BLOCK))))
-    //             return TypedActionResult.pass(player.getStackInHand(hand));
-    //     Inventories.remove(player.getInventory(), GenericUtils.UNO_BUTTON, 64, false);
-    //     ((ServerPlayerEntityMixinAccess)((ServerPlayerEntity)player)).unomod$toggleUno();
-    //     for (ServerPlayerEntity lplayer : table.getPlayerStorage().getPlayers()) {
-    //         if (lplayer.equals((ServerPlayerEntity)player)) continue;
-    //         ScoreboardPlayerScore lplayerScore = world.getScoreboard().getPlayerScore(lplayer.getEntityName(), world.getScoreboard().getObjective("table"+table.getId()));
-    //         if (lplayerScore.getScore() == 1 && (!((ServerPlayerEntityMixinAccess)lplayer).unomod$isUnoPressed())) {
-    //             Managers.getCardManager().giveCard(lplayer, 2, false);
-    //         }
-    //     }
-    //     return TypedActionResult.pass(player.getStackInHand(hand));
-    // }
+    // ***************
+    // BlockBreakEvent
+    // ***************
+
+    public static boolean beforeCenterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity entity) {
+        TableManager tableManager = Managers.getTableManager();
+        if (tableManager.getTables().isEmpty()) {
+            return true;
+        }
+        boolean bl = GenericUtils.getConfig().getTableBreakAction();
+        for (Table table : tableManager.getTables()) {
+            if (!(pos.equals(table.getCenter()))) return true;
+            if (!(table.getGame().getGameState() == GameState.WAITING)) return false;
+            if (!(table.getCenter().equals(pos))) continue;
+            if (!bl) return false;
+        }
+        return true;
+    }
+
+    public static void afrerCenterBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity entity) {
+        TableManager tableManager = Managers.getTableManager();
+        if (tableManager.getTables().isEmpty()) {
+            return;
+        }
+        tableManager.onTableBreak(pos, world);
+    }
+
+    public static boolean beforeButtonBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity entity) {
+        TableManager tableManager = Managers.getTableManager();
+        List<Table> tables = tableManager.getTables();
+        if (tables.isEmpty()) return true;
+        for (Table table : tables) {
+            BlockStateStorage stateStorage = table.getBlockStateStorage();
+            if (stateStorage.getButtons().contains(state)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

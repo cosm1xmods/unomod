@@ -48,11 +48,11 @@ public class Game {
         this.justStarted = state;
     }
 
-    protected void setGameState(GameState state) {
+    public void setGameState(GameState state) {
         this.gameState = state;
     }
 
-    protected Game(GameState gameState) {
+    public Game(GameState gameState) {
         this.gameState = gameState;
     }
 

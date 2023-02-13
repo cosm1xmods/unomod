@@ -1,4 +1,4 @@
-package me.cosm1x.unomod.mixin;
+package me.cosm1x.unomod.mixin.rework;
 
 import java.util.UUID;
 

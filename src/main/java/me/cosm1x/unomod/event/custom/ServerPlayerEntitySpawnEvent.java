@@ -1,4 +1,4 @@
-package me.cosm1x.unomod.event;
+package me.cosm1x.unomod.event.custom;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

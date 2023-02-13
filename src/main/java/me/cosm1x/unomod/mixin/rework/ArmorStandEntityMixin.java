@@ -1,4 +1,4 @@
-package me.cosm1x.unomod.mixin;
+package me.cosm1x.unomod.mixin.rework;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,4 +1,4 @@
-package me.cosm1x.unomod.game;
+package me.cosm1x.unomod.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,10 @@ import java.util.List;
 import me.cosm1x.unomod.UnoMod;
 import me.cosm1x.unomod.config.UnoModConfig;
 import me.cosm1x.unomod.enums.GameState;
+import me.cosm1x.unomod.game.BlockStateStorage;
+import me.cosm1x.unomod.game.Game;
+import me.cosm1x.unomod.game.PlayerStorage;
+import me.cosm1x.unomod.game.Table;
 import me.cosm1x.unomod.util.GenericUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -149,7 +153,6 @@ public class TableManager {
         
         Table table = new Table(entity, tableCenter, id, game, playerStorage, blockStateStorage);
         
-        
         tables.add(table);
         
     }
@@ -187,7 +190,7 @@ public class TableManager {
             }
 
             ItemFrameEntity itemFrame = table.getItemFrame();
-            // Setup Item Frame
+            // Setup Item Frame item
             NbtCompound itemNbt = new NbtCompound();
             itemNbt.putString("id", config.getItemFrameItemNamespace());
             itemNbt.putByte("Count", (byte)1);

@@ -1,7 +1,7 @@
 package me.cosm1x.unomod.mixin;
 
 import me.cosm1x.unomod.access.ServerPlayerEntityMixinAccess;
-import me.cosm1x.unomod.event.ServerPlayerEntitySpawnEvent;
+import me.cosm1x.unomod.event.custom.ServerPlayerEntitySpawnEvent;
 import me.cosm1x.unomod.game.Table;
 import me.cosm1x.unomod.util.GenericUtils;
 import net.minecraft.nbt.NbtCompound;
@@ -52,6 +52,7 @@ public class ServerPlayerEntityMixin implements ServerPlayerEntityMixinAccess {
 		this.unomod$isUnoPressed = false;
 	}
 
+	// ServerPlayerEntitySpawnEvent
 	@Inject(method = "onSpawn()V", at = @At("TAIL"))
 	private void unomod$onSpawn(CallbackInfo info) {
 		ActionResult result = ServerPlayerEntitySpawnEvent.EVENT.invoker().interact((ServerPlayerEntity)(Object)this);
