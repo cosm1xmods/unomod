@@ -14,7 +14,7 @@ Showcase/tutorial video: **soon**
 
 ### Configuration
 At this moment, mod has two configuable values:
-- canSpectatorsSeeCards(**true**/**false**) - Can players in spectator gamemode see cards. Default: **false**
+- canSpectatorsSeeCards(**true**/**false**) - Can players in spectator gamemode see cards. Default: **false** (Not used, maybe in future?)
 - tableBreakAction(**true**/**false**) - Table will break when it's center broken. Default: **true**
 - replaceResourcePack(**true**/**false**) - (**Strongly recommened: true**) Replace the resource pack entry in server.properties. Default: **true**
 - itemFrameItem(**string**) - Namespace of **any item** that will be used for forming the table. Default: **minecraft:copper_ingot**
